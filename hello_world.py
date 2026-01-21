@@ -1,7 +1,8 @@
-"""Este modulo no hace nada interesante"""
+"""
+A simple hello world module.
+"""
 
 
-def bienvenida():
-    """Funcion de bienvenida"""
-    print("HOLA")
-
+def hello_world():
+    """A simple function that returns the string "Hello, World!"."""
+    return "Hello, World!"
