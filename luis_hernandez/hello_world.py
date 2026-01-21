@@ -1,7 +1,10 @@
-"""
-A
-"""
+"""Hello world"""
+
 
 def hello_world():
-    """ a """
-    return "Hola mundo"
+    """Imprime un mensaje"""
+    print("Hola mundo")
+
+
+if __name__ == "__main__":
+    hello_world()
