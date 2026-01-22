@@ -1,11 +1,8 @@
 """
-Simple hello world function
+A simple hello world module.
 """
 
 
-def welcome():
-    """Function to return a welcome message"""
-    return "Hello world"
-
-
-welcome()
+def hello_world():
+    """A simple function that returns the string "Hello, World!"."""
+    return "Hello, World!"
