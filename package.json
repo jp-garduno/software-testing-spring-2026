@@ -1,0 +1,25 @@
+{
+  "name": "software-testing-spring-2026",
+  "version": "1.0.0",
+  "description": "Software Testing Course - Spring 2026",
+  "main": "hello_world.js",
+  "scripts": {
+    "lint": "eslint **/*.{js,ts}",
+    "lint:fix": "eslint **/*.{js,ts} --fix",
+    "start": "node hello_world.js",
+    "start:ts": "npx ts-node hello_world.ts",
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "keywords": ["software-testing", "javascript", "typescript", "hello-world"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "@types/node": "^20.11.5"
+  }
+}
