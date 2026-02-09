@@ -5,9 +5,9 @@ Docstring for hello_world
 
 def saludo():
     """
-    Docstring for saludo
+    Mensaje de explicacion de la funcion
     """
-    print("hola mundo")
+    print("hola")
 
 
 saludo()
