@@ -1,11 +1,10 @@
 """
 Docstring for hello_world
 A simple hello world module.
-A simple hello world module.
 """
 def hello_world():
     """
     Docstring for hello_world
     """
-    return "Hola mundo!"
-    
+    print("Hola mundo!")
+hello_world()
