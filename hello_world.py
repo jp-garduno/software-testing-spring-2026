@@ -9,6 +9,3 @@ def hello_world():
     Docstring for hello_world
     """
     return "Hola mundo!"
-
-
-hello_world()
