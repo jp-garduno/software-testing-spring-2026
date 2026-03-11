@@ -10,10 +10,14 @@ from white_box.class_exercises import (
     BankAccount,
     BankingSystem,
     VendingMachine,
+    calculate_order_total,
+    calculate_total_discount,
+    check_number_status,
     divide,
     get_grade,
     is_even,
     is_triangle,
+    validate_password,
 )
 
 
@@ -113,7 +117,133 @@ class TestIsTriangle(unittest.TestCase):
         self.assertEqual(is_triangle(2, 1, 1), "No, it's not a triangle.")
 
 
-class TestWhiteBoxVendingMachine(unittest.TestCase):
+class TestCheckNumberStatus(unittest.TestCase):
+    """
+    White-box unittest class for the check_number_status function.
+    """
+
+    def test_check_number_status_positive(self):
+        """
+        Checks the number is positive.
+        """
+        self.assertEqual(check_number_status(5), "Positive")
+
+    def test_check_number_status_negative(self):
+        """
+        Checks the number is negative.
+        """
+        self.assertEqual(check_number_status(-3), "Negative")
+
+    def test_check_number_status_zero(self):
+        """
+        Checks the number is zero.
+        """
+        self.assertEqual(check_number_status(0), "Zero")
+
+
+class TestValidatePassword(unittest.TestCase):
+    """
+    White-box unittest class for the validate_password function.
+    """
+
+    def test_validate_password_valid(self):
+        """
+        Checks the password is valid.
+        """
+        self.assertTrue(validate_password("Valid123!"))
+
+    def test_validate_password_invalid_length(self):
+        """
+        Checks the password is invalid due to length.
+        """
+        self.assertFalse(validate_password("Short1!"))
+
+    def test_validate_password_no_uppercase(self):
+        """
+        Checks the password is invalid due to missing uppercase letter.
+        """
+        self.assertFalse(validate_password("invalid123!"))
+
+    def test_validate_password_no_lowercase(self):
+        """
+        Checks the password is invalid due to missing lowercase letter.
+        """
+        self.assertFalse(validate_password("INVALID123!"))
+
+    def test_validate_password_no_digit(self):
+        """
+        Checks the password is invalid due to missing digit.
+        """
+        self.assertFalse(validate_password("Invalid!"))
+
+    def test_validate_password_no_special_character(self):
+        """
+        Checks the password is invalid due to missing special character.
+        """
+        self.assertFalse(validate_password("Invalid123"))
+
+    def test_validate_password_invalid_special_character(self):
+        """
+        Checks the password is invalid due to invalid special character.
+        """
+        self.assertFalse(validate_password("Invalid123?"))
+
+
+class TestCalculateTotalDiscount(unittest.TestCase):
+    """
+    White-box unittest class for the calculate_total_discount function.
+    """
+
+    def test_calculate_total_discount_no_discounts(self):
+        """
+        Checks the total discount is 0%.
+        """
+        self.assertEqual(calculate_total_discount(99), 0)
+
+    def test_calculate_total_discount_ten_percent(self):
+        """
+        Checks the total discount is 10%.
+        """
+        self.assertEqual(calculate_total_discount(100), 10)
+        self.assertEqual(calculate_total_discount(500), 50)
+
+    def test_calculate_total_discount_twenty_percent(self):
+        """
+        Checks the total discount is 20%.
+        """
+        self.assertEqual(calculate_total_discount(1000), 200)
+
+
+class TestCalculateOrderTotal(unittest.TestCase):
+    """
+    White-box unittest class for the calculate_order_total function.
+    """
+
+    def test_calculate_order_total_no_discounts(self):
+        """
+        Checks the order total is correct with no discounts.
+        """
+        self.assertEqual(
+            calculate_order_total(
+                [
+                    {"quantity": 1, "price": 10},
+                    {"quantity": 5, "price": 20},
+                    {"quantity": 6, "price": 30},
+                    {"quantity": 10, "price": 40},
+                    {"quantity": 11, "price": 50},
+                ]
+            ),
+            1156,
+        )
+
+    def test_calculate_order_total_no_items(self):
+        """
+        Checks the order total is 0 when there are no items.
+        """
+        self.assertEqual(calculate_order_total([]), 0)
+
+
+class TestVendingMachine(unittest.TestCase):
     """
     Vending Machine unit tests.
     """
