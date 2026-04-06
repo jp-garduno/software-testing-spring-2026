@@ -88,6 +88,9 @@ class TestAdd(unittest.TestCase):
 
     3. Allow the add method to handle newlines as separators, instead of comas.
     "1,2\n3" should return "6". "2,\n3" is invalid, but no need to clarify it with the program.
+
+    4. Add validation to not to allow a separator at the end.
+    For example "1,2," should return an error (or throw an exception).
     """
 
     def test_add_should_return_0_when_numbers_is_an_empty_string(self):
@@ -119,3 +122,10 @@ class TestAdd(unittest.TestCase):
         Tests that add returns the sum when numbers contains newlines as separators.
         """
         self.assertEqual(add("1,2\n3"), 6)
+
+    def test_add_should_raise_exception_when_numbers_ends_with_a_separator(self):
+        """
+        Tests that add raises an exception when numbers ends with a separator.
+        """
+        with self.assertRaises(ValueError):
+            add("1,2,")
