@@ -53,6 +53,8 @@ def add(numbers):
     Start with the simplest case (empty string) and extend it with the more advanced cases
     (“1” and “1,2”) step by step keep the three rules in mind and always write just
     sufficient enough code do not forget to refactor your code after each passing test.
+
+    2. Allow the add method to handle an unknown number of arguments.
     """
     if numbers == "":
         return 0

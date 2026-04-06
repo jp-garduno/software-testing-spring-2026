@@ -83,6 +83,8 @@ class TestAdd(unittest.TestCase):
     Start with the simplest case (empty string) and extend it with the more advanced cases
     (“1” and “1,2”) step by step keep the three rules in mind and always write just
     sufficient enough code do not forget to refactor your code after each passing test.
+
+    2. Allow the add method to handle an unknown number of arguments.
     """
 
     def test_add_should_return_0_when_numbers_is_an_empty_string(self):
@@ -104,3 +106,10 @@ class TestAdd(unittest.TestCase):
         """
         self.assertEqual(add("1,2"), 3)
         self.assertEqual(add("2,3"), 5)
+
+    def test_add_should_return_sum_when_numbers_contains_unknown_number_of_arguments(self):
+        """
+        Tests that add returns the sum for an unknown number of arguments.
+        """
+        self.assertEqual(add("1,2,3"), 6)
+        self.assertEqual(add("2,3,4,5"), 14)
