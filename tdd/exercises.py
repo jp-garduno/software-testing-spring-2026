@@ -62,6 +62,8 @@ def add(numbers):
     if numbers == "":
         return 0
 
+    numbers = numbers.replace("\n", ",")
+
     num_list = numbers.split(",")
     if len(num_list) == 1:
         return int(num_list[0])
