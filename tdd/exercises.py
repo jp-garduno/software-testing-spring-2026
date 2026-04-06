@@ -63,4 +63,4 @@ def add(numbers):
     if len(num_list) == 1:
         return int(num_list[0])
 
-    return int(num_list[0]) + int(num_list[1])
+    return sum(int(num) for num in num_list)
