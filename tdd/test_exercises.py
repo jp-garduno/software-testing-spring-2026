@@ -91,6 +91,17 @@ class TestAdd(unittest.TestCase):
 
     4. Add validation to not to allow a separator at the end.
     For example "1,2," should return an error (or throw an exception).
+
+    5. Allow the add method to handle different delimiters. To change the delimiter,
+    the beginning of the input will contain a separate line that looks like this:
+    //[delimiter]\n[numbers]
+
+    Examples:
+    - "//;\n1;3" should return "4"
+    - "//|\n1|2|3" should return "6"
+    - "//sep\n2sep5" should return "7"
+    - "//|\n1|2,3" is invalid and should return an error (or throw an exception) with the message
+      "'|' expected but ',' found at position 3".
     """
 
     def test_add_should_return_0_when_numbers_is_an_empty_string(self):
@@ -128,5 +139,20 @@ class TestAdd(unittest.TestCase):
         """
         Tests that add raises an exception when numbers ends with a separator.
         """
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError, msg="Input string cannot end with a separator."):
             add("1,2,")
+
+    def test_add_should_return_sum_when_numbers_contains_different_delimiters(self):
+        """
+        Tests that add returns the sum when numbers contains different delimiters.
+        """
+        self.assertEqual(add("//;\n1;3"), 4)
+        self.assertEqual(add("//|\n1|2|3"), 6)
+        self.assertEqual(add("//sep\n2sep5"), 7)
+
+    def test_add_should_raise_exception_when_numbers_contains_invalid_delimiters(self):
+        """
+        Tests that add raises an exception when numbers contains invalid delimiters.
+        """
+        with self.assertRaisesRegex(ValueError, r"'|' expected but ',' found at position 3"):
+            add("//|\n1|2,3")
