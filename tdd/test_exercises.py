@@ -104,6 +104,19 @@ class TestAdd(unittest.TestCase):
     - "//sep\n2sep5" should return "7"
     - "//|\n1|2,3" is invalid and should return an error (or throw an exception) with the message
       "'|' expected but ',' found at position 3".
+
+    6. Calling add with negative numbers will return the message:
+    "Negative number(s) not allowed: <negativeNumbers>"
+
+    Examples:
+    - "1,-2" is invalid and should return the message "Negative number(s) not allowed: -2"
+    - "2,-4,-9" is invalid and should return the message "Negative number(s) not allowed: -4,-9"
+
+    7. Calling add with multiple errors will return all error messages separated by newlines.
+    "//\n1|2,-3" is invalid and return the message
+    "Negative number(s) not allowed: -3\n'|' expected but ',' found at position 3."
+
+    8. Numbers bigger than 1000 should be ignored, so adding 2+1001=2.
     """
 
     def test_add_should_return_0_when_numbers_is_an_empty_string(self):
@@ -148,20 +161,64 @@ class TestAdd(unittest.TestCase):
         ):
             add("1,2,")
 
-    # def test_add_should_return_sum_when_numbers_contains_different_delimiters(self):
-    #    """
-    #    Tests that add returns the sum when numbers contains different delimiters.
-    #    """
-    #    self.assertEqual(add("//;\n1;3"), 4)
-    #    self.assertEqual(add("//|\n1|2|3"), 6)
-    #    self.assertEqual(add("//sep\n2sep5"), 7)
+    def test_add_should_return_sum_when_numbers_contains_different_delimiters(self):
+        """
+        Tests that add returns the sum when numbers contains different delimiters.
+        """
+        self.assertEqual(add("//;\n1;3"), 4)
+        self.assertEqual(add("//|\n1|2|3"), 6)
+        self.assertEqual(add("//sep\n2sep5"), 7)
 
-    # def test_add_should_raise_exception_when_numbers_contains_invalid_delimiters(self):
-    #    """
-    #    Tests that add raises an exception when numbers contains invalid delimiters.
-    #    """
-    #    with self.assertRaisesRegex(ValueError, r"'|' expected but ',' found at position 3"):
-    #        add("//|\n1|2,3")
+    def test_add_should_raise_exception_when_numbers_contains_invalid_delimiters(self):
+        """
+        Tests that add raises an exception when numbers contains invalid delimiters.
+        """
+        with self.assertRaisesRegex(ValueError, r"expected but ',' found at position"):
+            add("//|\n1|2,3")
+
+        with self.assertRaisesRegex(ValueError, r"expected but 's' found at position"):
+            add("//|\n1|2sep3")
+
+        with self.assertRaisesRegex(ValueError, r"expected but '|' found at position"):
+            add("//sep\n1sep2|3")
+
+    def test_add_should_raise_exception_when_numbers_contains_negative_numbers(self):
+        """
+        Tests that add raises an exception when numbers contains negative numbers.
+        """
+        with self.assertRaisesRegex(
+            ValueError, r"Negative number\(s\) not allowed: -2"
+        ):
+            add("1,-2")
+
+        with self.assertRaisesRegex(
+            ValueError, r"Negative number\(s\) not allowed: -4,-9"
+        ):
+            add("2,-4,-9")
+
+        with self.assertRaisesRegex(
+            ValueError, r"Negative number\(s\) not allowed: -3"
+        ):
+            add("//;\n1;-3")
+
+    def test_add_should_raise_exception_with_multiple_errors(self):
+        """
+        Tests that add raises an exception with multiple error messages combined.
+        """
+        with self.assertRaisesRegex(
+            ValueError,
+            r"Negative number\(s\) not allowed: -3\n.*expected but ',' found at position",
+        ):
+            add("//|\n1|2,-3")
+
+    def test_add_should_ignore_numbers_bigger_than_1000(self):
+        """
+        Tests that add ignores numbers bigger than 1000.
+        """
+        self.assertEqual(add("2,1001"), 2)
+        self.assertEqual(add("1000,1001,2"), 1002)
+        self.assertEqual(add("999,1000,1001"), 1999)
+        self.assertEqual(add("//;\n2;1001"), 2)
 
 
 class TestSearchCities(unittest.TestCase):

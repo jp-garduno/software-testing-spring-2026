@@ -5,6 +5,7 @@ Test Driven Development (TDD) exercises.
 """
 import json
 import os
+import re
 
 
 def fizzbuzz(num):
@@ -42,6 +43,48 @@ def fizzbuzz(num):
     return output
 
 
+def _parse_delimiter_and_numbers(numbers):
+    """Extract delimiter and number part from input string."""
+    if not numbers.startswith("//"):
+        return ",", numbers.replace("\n", ",")
+
+    delimiter_end = numbers.find("\n")
+    if delimiter_end == -1:
+        raise ValueError("Invalid delimiter format")
+
+    delimiter = numbers[2:delimiter_end]
+    number_part = numbers[delimiter_end + 1 :]
+    return delimiter, number_part
+
+
+def _collect_validation_errors(numbers, delimiter, number_part):
+    """Collect all validation errors for the input."""
+    errors = []
+
+    # Check for end separator error
+    if number_part.endswith(delimiter):
+        errors.append("Input string cannot end with a separator.")
+
+    # Check for invalid delimiter characters (custom delimiters only)
+    if numbers.startswith("//"):
+        valid_chars = set("0123456789-" + delimiter)
+        for i, char in enumerate(number_part):
+            if char not in valid_chars:
+                errors.append(
+                    f"'{delimiter}' expected but '{char}' found at position {i}"
+                )
+                break
+
+    # Check for negative numbers
+    negative_matches = re.findall(r"-\d+", number_part)
+    if negative_matches:
+        errors.insert(
+            0, f"Negative number(s) not allowed: {','.join(negative_matches)}"
+        )
+
+    return errors
+
+
 def add(numbers):
     """
     Kata 2 - String calculator
@@ -74,17 +117,38 @@ def add(numbers):
     - "//sep\n2sep5" should return "7"
     - "//|\n1|2,3" is invalid and should return an error (or throw an exception) with the message
       "'|' expected but ',' found at position 3".
+
+    6. Calling add with negative numbers will return the message:
+    "Negative number(s) not allowed: <negativeNumbers>"
+
+    Examples:
+    - "1,-2" is invalid and should return the message "Negative number(s) not allowed: -2"
+    - "2,-4,-9" is invalid and should return the message "Negative number(s) not allowed: -4,-9"
+
+    7. Calling add with multiple errors will return all error messages separated by newlines.
+    "//\n1|2,-3" is invalid and return the message
+    "Negative number(s) not allowed: -3\n'|' expected but ',' found at position 3."
+
+    8. Numbers bigger than 1000 should be ignored, so adding 2+1001=2.
     """
     if numbers == "":
         return 0
 
-    numbers = numbers.replace("\n", ",")
+    try:
+        delimiter, number_part = _parse_delimiter_and_numbers(numbers)
+    except ValueError as e:
+        raise e
 
-    if numbers.endswith(","):
-        raise ValueError("Input string cannot end with a separator.")
+    errors = _collect_validation_errors(numbers, delimiter, number_part)
 
-    num_list = numbers.split(",")
-    return sum(int(num) if num != "" else 0 for num in num_list)
+    if errors:
+        raise ValueError("\n".join(errors))
+
+    # Parse and sum the numbers (Requirement 8: ignore numbers > 1000)
+    num_strings = [s for s in number_part.split(delimiter) if s]
+    numbers_list = [int(s) for s in num_strings]
+    filtered_numbers = [num for num in numbers_list if num <= 1000]
+    return sum(filtered_numbers)
 
 
 def search_cities(str_to_search):
