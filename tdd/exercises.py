@@ -6,11 +6,13 @@ Test Driven Development (TDD) exercises.
 import json
 import os
 import re
+import string
 
 
 def fizzbuzz(num):
     """
     Kata 1 - FizzBuzz
+
     FizzBuzz is one of the most famous coding exercises for beginners.
     It is a simple exercise but an excellent one to start learning the TDD flow with.
 
@@ -88,6 +90,7 @@ def _collect_validation_errors(numbers, delimiter, number_part):
 def add(numbers):
     """
     Kata 2 - String calculator
+
     Create a simple calculator that takes a String and returns a integer.
 
     Requirements
@@ -151,9 +154,65 @@ def add(numbers):
     return sum(filtered_numbers)
 
 
+def password_validator(password):
+    """
+    Kata 3 - Password input field validation
+
+    Create a function that can be used as a validator for the password field of a user registration
+    form. The validation function takes a string as an input and returns a validation result.
+    The validation result should contain a boolean indicating if the password is valid or not,
+    and also a field with the possible validation errors.
+
+    Requirements
+
+    1. The password must be at least 8 characters long.
+    If it is not met, then the following error message should be returned:
+    "Password must be at least 8 characters".
+
+    2. The password must contain at least 2 numbers.
+    If it is not met, then the following error message should be returned:
+    "The password must contain at least 2 numbers".
+
+    3. The validation function should handle multiple validation errors.
+    For example, "somepassword" should an error message:
+    "Password must be at least 8 characters\nThe password must contain at least 2 numbers".
+
+    4. The password must contain at least one capital letter.
+    If it is not met, then the following error message should be returned:
+    "Password must contain at least one capital letter".
+
+    5. The password must contain at least one special character.
+    If it is not met, then the following error message should be returned:
+    "Password must contain at least one special character".
+    """
+    errors = []
+
+    # Requirement 1: Password must be at least 8 characters long
+    if len(password) < 8:
+        errors.append("Password must be at least 8 characters")
+
+    # Requirement 2: Password must contain at least 2 numbers
+    number_count = sum(1 for char in password if char.isdigit())
+    if number_count < 2:
+        errors.append("The password must contain at least 2 numbers")
+
+    # Requirement 4: Password must contain at least one capital letter
+    if not any(char.isupper() for char in password):
+        errors.append("Password must contain at least one capital letter")
+
+    # Requirement 5: Password must contain at least one special character
+    if not any(char in string.punctuation for char in password):
+        errors.append("Password must contain at least one special character")
+
+    # Return validation result
+    is_valid = len(errors) == 0
+    return {"is_valid": is_valid, "errors": errors}
+
+
 def search_cities(str_to_search):
     """
     Kata 4 - Search functionality
+
     Implement a city search functionality. The function takes a string (search text) as input
     and returns the found cities which corresponds to the search text.
 

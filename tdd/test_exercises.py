@@ -7,12 +7,13 @@ import json
 import os
 import unittest
 
-from tdd.exercises import add, fizzbuzz, search_cities
+from tdd.exercises import add, fizzbuzz, password_validator, search_cities
 
 
 class TestFizzBuzz(unittest.TestCase):
     """
     Kata 1 - FizzBuzz
+
     FizzBuzz is one of the most famous coding exercises for beginners.
     It is a simple exercise but an excellent one to start learning the TDD flow with.
 
@@ -75,6 +76,7 @@ class TestFizzBuzz(unittest.TestCase):
 class TestAdd(unittest.TestCase):
     """
     Kata 2 - String calculator
+
     Create a simple calculator that takes a String and returns a integer.
 
     Requirements
@@ -221,9 +223,88 @@ class TestAdd(unittest.TestCase):
         self.assertEqual(add("//;\n2;1001"), 2)
 
 
+class TestPasswordValidator(unittest.TestCase):
+    """
+    Kata 3 - Password input field validation
+
+    Create a function that can be used as a validator for the password field of a user registration
+    form. The validation function takes a string as an input and returns a validation result.
+    The validation result should contain a boolean indicating if the password is valid or not,
+    and also a field with the possible validation errors.
+
+    Requirements
+
+    1. The password must be at least 8 characters long.
+    If it is not met, then the following error message should be returned:
+    "Password must be at least 8 characters".
+
+    2. The password must contain at least 2 numbers.
+    If it is not met, then the following error message should be returned:
+    "The password must contain at least 2 numbers".
+
+    3. The validation function should handle multiple validation errors.
+    For example, "somepassword" should an error message:
+    "Password must be at least 8 characters\nThe password must contain at least 2 numbers".
+
+    4. The password must contain at least one capital letter.
+    If it is not met, then the following error message should be returned:
+    "Password must contain at least one capital letter".
+
+    5. The password must contain at least one special character.
+    If it is not met, then the following error message should be returned:
+    "Password must contain at least one special character".
+    """
+
+    def test_password_should_return_error_when_too_short(self):
+        """
+        Returns an error when the password is too short.
+        """
+        result = password_validator("short")
+        self.assertFalse(result["is_valid"])
+        self.assertIn("Password must be at least 8 characters", result["errors"])
+
+    def test_password_should_return_error_when_not_enough_numbers(self):
+        """
+        Returns an error when the password does not contain enough numbers.
+        """
+        result = password_validator("Password1")
+        self.assertFalse(result["is_valid"])
+        self.assertIn("The password must contain at least 2 numbers", result["errors"])
+
+    def test_password_should_return_multiple_errors(self):
+        """
+        Returns multiple errors when the password does not meet multiple requirements.
+        """
+        result = password_validator("short")
+        self.assertFalse(result["is_valid"])
+        self.assertIn("Password must be at least 8 characters", result["errors"])
+        self.assertIn("The password must contain at least 2 numbers", result["errors"])
+
+    def test_password_should_return_error_when_no_capital_letter(self):
+        """
+        Returns an error when the password does not contain a capital letter.
+        """
+        result = password_validator("password12")
+        self.assertFalse(result["is_valid"])
+        self.assertIn(
+            "Password must contain at least one capital letter", result["errors"]
+        )
+
+    def test_password_should_return_error_when_no_special_character(self):
+        """
+        Returns an error when the password does not contain a special character.
+        """
+        result = password_validator("Password12")
+        self.assertFalse(result["is_valid"])
+        self.assertIn(
+            "Password must contain at least one special character", result["errors"]
+        )
+
+
 class TestSearchCities(unittest.TestCase):
     """
     Kata 4 - Search functionality
+
     Implement a city search functionality. The function takes a string (search text) as input
     and returns the found cities which corresponds to the search text.
 
