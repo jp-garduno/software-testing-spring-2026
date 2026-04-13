@@ -3,11 +3,18 @@
 """
 Test Driven Development (TDD) tests.
 """
-import json
-import os
 import unittest
 
-from tdd.exercises import add, fizzbuzz, password_validator, search_cities
+from parameterized import parameterized
+
+from tdd.exercises import (
+    add,
+    fizzbuzz,
+    password_validator,
+    read_cities_from_file,
+    scan_barcode,
+    search_cities,
+)
 
 
 class TestFizzBuzz(unittest.TestCase):
@@ -334,10 +341,7 @@ class TestSearchCities(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Load cities from JSON file
-        cities_file_path = os.path.join(os.path.dirname(__file__), "cities.json")
-        with open(cities_file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            cities = data["cities"]
+        cities = read_cities_from_file()
 
         cls.test_data = [
             # Requirement 1: < 2 characters should return no results
@@ -368,3 +372,44 @@ class TestSearchCities(unittest.TestCase):
         for x in self.test_data:
             with self.subTest(input=x["input"], output=x["output"]):
                 self.assertEqual(search_cities(x["input"]), x["output"])
+
+
+class TestScanBarcode(unittest.TestCase):
+    """
+    Kata 5: Point of sale
+
+    Create a simple app for scanning bar codes to sell products.
+
+    Requirements:
+
+    1. Barcode '12345' should display price '$7.25'.
+
+    2. Barcode '23456' should display price '$12.50'.
+
+    3. Barcode '99999' should display 'Error: barcode not found'.
+
+    4. Empty barcode should display 'Error: empty barcode'.
+
+    5. Introduce a concept of total command where it is possible to scan multiple items.
+    The command would display the sum of the scanned product prices.
+    """
+
+    @parameterized.expand(
+        [
+            # Test case format: (barcode_input, expected_output)
+            ("12345", "$7.25"),
+            ("23456", "$12.50"),
+            ("99999", "Error: barcode not found"),
+            ("", "Error: empty barcode"),
+            ("   ", "Error: empty barcode"),
+            ("54321", "Error: barcode not found"),
+            ("ABCDE", "Error: barcode not found"),
+        ]
+    )
+    def test_scan_barcode(self, barcode, expected_output):
+        """
+        Data-driven test for scan_barcode function.
+        Tests various barcode inputs and verifies expected outputs.
+        """
+        result = scan_barcode(barcode)
+        self.assertEqual(result, expected_output)

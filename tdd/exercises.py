@@ -209,6 +209,14 @@ def password_validator(password):
     return {"is_valid": is_valid, "errors": errors}
 
 
+def read_cities_from_file(cities_file_name="cities.json"):
+    """Read city names from a JSON file."""
+    cities_file_path = os.path.join(os.path.dirname(__file__), cities_file_name)
+    with open(cities_file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        return data["cities"]
+
+
 def search_cities(str_to_search):
     """
     Kata 4 - Search functionality
@@ -239,11 +247,7 @@ def search_cities(str_to_search):
     5. If the search text is a "*" (asterisk), then it should return all the city names.
     """
     # Load cities from JSON file
-    cities_file_path = os.path.join(os.path.dirname(__file__), "cities.json")
-    with open(cities_file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-        cities = data["cities"]
-
+    cities = read_cities_from_file()
     cities_found = []
 
     # Requirement 5: If search text is "*", return all cities
@@ -265,3 +269,37 @@ def search_cities(str_to_search):
             cities_found.append(city)
 
     return cities_found
+
+
+def scan_barcode(barcode):
+    """
+    Kata 5: Point of sale
+
+    Create a simple app for scanning bar codes to sell products.
+
+    Requirements:
+
+    1. Barcode '12345' should display price '$7.25'.
+
+    2. Barcode '23456' should display price '$12.50'.
+
+    3. Barcode '99999' should display 'Error: barcode not found'.
+
+    4. Empty barcode should display 'Error: empty barcode'.
+
+    5. Introduce a concept of total command where it is possible to scan multiple items.
+    The command would display the sum of the scanned product prices.
+    """
+    # Requirement 4: Empty barcode should display 'Error: empty barcode'
+    if not barcode or barcode.strip() == "":
+        return "Error: empty barcode"
+
+    # Product database with barcode to price mapping
+    products = {"12345": "$7.25", "23456": "$12.50"}  # Requirement 1  # Requirement 2
+
+    # Check if barcode exists in products database
+    if barcode in products:
+        return products[barcode]
+
+    # Requirement 3: Unknown barcode should display 'Error: barcode not found'
+    return "Error: barcode not found"
