@@ -209,12 +209,14 @@ def password_validator(password):
     return {"is_valid": is_valid, "errors": errors}
 
 
-def read_cities_from_file(cities_file_name="cities.json"):
+def read_from_json(cities_file_name="cities"):
     """Read city names from a JSON file."""
-    cities_file_path = os.path.join(os.path.dirname(__file__), cities_file_name)
+    cities_file_path = os.path.join(
+        os.path.dirname(__file__), f"{cities_file_name}.json"
+    )
     with open(cities_file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-        return data["cities"]
+        return data[cities_file_name]
 
 
 def search_cities(str_to_search):
@@ -247,7 +249,7 @@ def search_cities(str_to_search):
     5. If the search text is a "*" (asterisk), then it should return all the city names.
     """
     # Load cities from JSON file
-    cities = read_cities_from_file()
+    cities = read_from_json("cities")
     cities_found = []
 
     # Requirement 5: If search text is "*", return all cities
@@ -294,8 +296,8 @@ def scan_barcode(barcode):
     if not barcode or barcode.strip() == "":
         return "Error: empty barcode"
 
-    # Product database with barcode to price mapping
-    products = {"12345": "$7.25", "23456": "$12.50"}  # Requirement 1  # Requirement 2
+    # Load product database from JSON file
+    products = read_from_json("products")
 
     # Check if barcode exists in products database
     if barcode in products:

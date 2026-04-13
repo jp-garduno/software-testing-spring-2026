@@ -11,7 +11,7 @@ from tdd.exercises import (
     add,
     fizzbuzz,
     password_validator,
-    read_cities_from_file,
+    read_from_json,
     scan_barcode,
     search_cities,
 )
@@ -341,7 +341,7 @@ class TestSearchCities(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Load cities from JSON file
-        cities = read_cities_from_file()
+        cities = read_from_json("cities")
 
         cls.test_data = [
             # Requirement 1: < 2 characters should return no results
