@@ -209,14 +209,14 @@ def password_validator(password):
     return {"is_valid": is_valid, "errors": errors}
 
 
-def read_from_json(cities_file_name="cities"):
+def read_from_json(key_and_file_name="cities"):
     """Read city names from a JSON file."""
     cities_file_path = os.path.join(
-        os.path.dirname(__file__), f"{cities_file_name}.json"
+        os.path.dirname(__file__), f"{key_and_file_name}.json"
     )
     with open(cities_file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-        return data[cities_file_name]
+        return data[key_and_file_name]
 
 
 def search_cities(str_to_search):
