@@ -3,10 +3,15 @@
 	- Prueba 1: Envio un 1, esperaría de respuesta un positive
 	- Prueba 2: Envio un 0, esperaría de respuesta un zero
 	- Prueba 3: Envio un -1, esperaría un negative
+Sobraron:
 	- Prueba 4: Envio un 1.1, esperaría de respuesta un positive
 		-> Compruebo si acepta números decimales
 	- Prueba 5: Envio un -1.1, esperaría de respuesta un negative
 		-> Compruebo si acepta números decimales negativos
+Manejo de errores:
+	- Un numero muy grande 10 a la 18
+	- Un numero muy cercano a cero, por ejemplo, 0.000000000000000001, para ver si da positive o zero
+	- Una letra, para ver si da error.
 
 2. Function that validates user passwords.
 The password validation rules are as follows:
@@ -27,6 +32,12 @@ and one special character (!, @, #, $, %, or &).
 		-> Ya que no tiene letra minúscula
 	- Prueba 6: Envio un Eric19!, esperaría de respuesta un False
 		-> Ya que no tiene letra la longitud necesaria (tiene 7 de longitud)
+faltaron:
+	- Prueba 7: Envio un Erick19@, esperaría de respuesta un True
+	- Prueba 8: Envio un Erick19#, esperaría de respuesta un True
+	- Prueba 9: Envio un Erick19$, esperaría de respuesta un True
+	- Prueba 10: Envio un Erick19%, esperaría de respuesta un True
+	- Prueba 11: Envio un Erick19&, esperaría de respuesta un True
 
 3. Function that calculates the discount for a customer's purchase based on the total amount.
 The discount rules are as follows:
@@ -64,6 +75,8 @@ If the quantity of a single item is greater than 10, a 10% discount is applied.
 		-> Compruebo si la función acepta cero
 	- Prueba 8: Envio -1, esperaría de respuesta un error.
 		-> Compruebo si la función acepta números negativos
+Falto:
+	Todas las pruebas con mas de 1 item.
 
 5. Function that calculates shipping costs for an online shopping system.
 The function calculates shipping costs based on the total weight of the items
@@ -96,5 +109,7 @@ If the total weight is greater than 10 kg, the cost is $40.
 		-> Compruebo si acepta números decimales
 	- Prueba 12: Envio -1 y express shipping, esperaría de respuesta un error
 		-> Compruebo si acepta números negativos
-	- Prueba 13: Envio -1 y hola, esperaría de respuesta un error
+	- Prueba 13: Envio 4 y hola, esperaría de respuesta un error
 		-> Compruebo que hace la función si recibe otro tipo de método de envió
+Faltaron:
+	Las pruebas de mas de 1 item
