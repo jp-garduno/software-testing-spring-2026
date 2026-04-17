@@ -9,6 +9,8 @@ from unittest.mock import patch
 from white_box.class_exercises import (
     BankAccount,
     BankingSystem,
+    Product,
+    ShoppingCart,
     VendingMachine,
     calculate_items_shipping_cost,
     calculate_order_total,
@@ -418,20 +420,9 @@ class TestVendingMachine(unittest.TestCase):
     Vending Machine unit tests.
     """
 
-    # @classmethod
-    # def setUpClass(cls):
-    #    return
-
     def setUp(self):
         self.vending_machine = VendingMachine()
         self.assertEqual(self.vending_machine.state, "Ready")
-
-    # def tearDown(self):
-    #    return
-
-    # @classmethod
-    # def tearDownClass(cls):
-    #    return
 
     def test_vending_machine_insert_coin_error(self):
         """
@@ -651,3 +642,144 @@ class TestBankingSystem(unittest.TestCase):
         )
         mock_print.assert_called_with("Insufficient funds.")
         self.assertFalse(result)
+
+
+# 28
+class TestProduct(unittest.TestCase):
+    """
+    Product unit tests.
+    """
+
+    def setUp(self):
+        self.product = Product("Laptop", 999.99)
+
+    def test_initialize_product(self):
+        """
+        Checks the Product class initializes correctly.
+        """
+        self.assertEqual(self.product.name, "Laptop")
+        self.assertEqual(self.product.price, 999.99)
+
+    @patch("builtins.print")
+    def test_view_product(self, mock_print):
+        """
+        Checks the Product displays its details correctly.
+        """
+        result = self.product.view_product()
+        expected_msg = (
+            f"The product {self.product.name} has a price of {self.product.price}"
+        )
+        mock_print.assert_called_with(expected_msg)
+        self.assertEqual(result, expected_msg)
+
+
+class TestShoppingCart(unittest.TestCase):
+    """
+    Shopping cart unit tests.
+    """
+
+    def setUp(self):
+        self.cart = ShoppingCart()
+        self.product_a = Product("Apple", 1.50)
+        self.product_b = Product("Banana", 0.75)
+
+    def test_initialize_shopping_cart(self):
+        """
+        Checks the ShoppingCart initializes with an empty list.
+        """
+        self.assertEqual(self.cart.items, [])
+
+    def test_add_product_new_item(self):
+        """
+        Checks adding a new product to the cart.
+        """
+        self.cart.add_product(self.product_a, 2)
+        self.assertEqual(len(self.cart.items), 1)
+        self.assertEqual(self.cart.items[0]["quantity"], 2)
+
+    def test_add_product_default_quantity(self):
+        """
+        Checks adding a product with default quantity of 1.
+        """
+        self.cart.add_product(self.product_a)
+        self.assertEqual(self.cart.items[0]["quantity"], 1)
+
+    def test_add_product_existing_item_increases_quantity(self):
+        """
+        Checks adding the same product again increases its quantity.
+        """
+        self.cart.add_product(self.product_a, 2)
+        self.cart.add_product(self.product_a, 3)
+        self.assertEqual(len(self.cart.items), 1)
+        self.assertEqual(self.cart.items[0]["quantity"], 5)
+
+    def test_add_multiple_different_products(self):
+        """
+        Checks adding different products creates separate entries.
+        """
+        self.cart.add_product(self.product_a, 1)
+        self.cart.add_product(self.product_b, 1)
+        self.assertEqual(len(self.cart.items), 2)
+
+    def test_remove_product_partial(self):
+        """
+        Checks removing part of a product's quantity.
+        """
+        self.cart.add_product(self.product_a, 5)
+        self.cart.remove_product(self.product_a, 2)
+        self.assertEqual(self.cart.items[0]["quantity"], 3)
+
+    def test_remove_product_exact_quantity_removes_item(self):
+        """
+        Checks removing exactly the full quantity removes the item from cart.
+        """
+        self.cart.add_product(self.product_a, 3)
+        self.cart.remove_product(self.product_a, 3)
+        self.assertEqual(len(self.cart.items), 0)
+
+    def test_remove_product_more_than_available_removes_item(self):
+        """
+        Checks removing more than available quantity removes the item entirely.
+        """
+        self.cart.add_product(self.product_a, 2)
+        self.cart.remove_product(self.product_a, 10)
+        self.assertEqual(len(self.cart.items), 0)
+
+    def test_remove_product_not_in_cart_does_nothing(self):
+        """
+        Checks removing a product not in cart does nothing.
+        """
+        self.cart.add_product(self.product_a, 2)
+        self.cart.remove_product(self.product_b, 1)
+        self.assertEqual(len(self.cart.items), 1)
+
+    @patch("builtins.print")
+    def test_view_cart(self, mock_print):
+        """
+        Checks view_cart prints each item correctly.
+        """
+        self.cart.add_product(self.product_a, 2)
+        self.cart.view_cart()
+        mock_print.assert_called_with(
+            f"2 x {self.product_a.name} - ${self.product_a.price * 2}"
+        )
+
+    @patch("builtins.print")
+    def test_checkout(self, mock_print):
+        """
+        Checks checkout prints the correct total.
+        """
+        self.cart.add_product(self.product_a, 2)  # 2 * 1.50 = 3.00
+        self.cart.add_product(self.product_b, 4)  # 4 * 0.75 = 3.00
+        self.cart.checkout()
+        mock_print.assert_any_call("Total: $6.0")
+        mock_print.assert_any_call("Checkout completed. Thank you for shopping!")
+
+    @patch("builtins.print")
+    def test_checkout_empty_cart(self, mock_print):
+        """
+        Checks checkout on empty cart prints $0 total.
+        """
+        self.cart.checkout()
+        mock_print.assert_any_call("Total: $0")
+        mock_print.assert_any_call("Checkout completed. Thank you for shopping!")
