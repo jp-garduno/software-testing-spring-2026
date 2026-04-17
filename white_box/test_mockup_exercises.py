@@ -4,13 +4,13 @@
 Mock up testing examples.
 """
 import unittest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import MagicMock, mock_open, patch
 
 from white_box.mockup_exercises import (
+    execute_command,
     fetch_data_from_api,
     perform_action_based_on_time,
     read_data_from_file,
-    execute_command,
 )
 
 
@@ -65,7 +65,7 @@ class TestReadDataFromFile(unittest.TestCase):
         mock_file.assert_called_once_with("fake_file.txt", encoding="utf-8")
 
     @patch("builtins.open", side_effect=FileNotFoundError)
-    def test_read_data_from_file_not_found(self, mock_file):
+    def test_read_data_from_file_not_found(self, _):
         """
         Error case: file does not exist, raises FileNotFoundError.
         """
